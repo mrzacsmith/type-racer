@@ -22,6 +22,26 @@ const connectDB = mongoose.connect(
 )
 
 io.on('connect', (socket) => {
+  socket.on('timer', async ({ gameID, playerID }) => {
+    let countDown = 5
+    let game = await Game.findById(gameID)
+    let player = game.players.id(playerID)
+    if (player.isPartyLeader) {
+      let timerID = setInterval(async () => {
+        if (countDown >= 0) {
+          io.to(gameID).emit('timer', { countDown, msg: 'Starting game' })
+          countDown--
+        } else {
+          game.isOpen = false
+          game = await game.save()
+          io.to(gameID).emit('udpateGame', game)
+          // startGameClock(gameID)
+          clearInterval(timerID)
+        }
+      }, 1000)
+    }
+  })
+
   socket.on('join-game', async ({ gameID: _id, nickName }) => {
     try {
       let game = await Game.findById(_id)

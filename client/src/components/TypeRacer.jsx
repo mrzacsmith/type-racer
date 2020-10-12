@@ -1,6 +1,6 @@
 import React from 'react'
 import { Redirect } from 'react-router'
-// import CountDown from './CountDown.jsx'
+import CountDown from './CountDown.jsx'
 import StartBtn from './StartBtn.jsx'
 import socket from '../socketConfig.js'
 
@@ -19,7 +19,7 @@ const TypeRacer = ({ gameState }) => {
 
   return (
     <div className='text-center'>
-      {/* <CountDown /> */}
+      <CountDown />
       <StartBtn player={player} gameID={_id} />
     </div>
   )
