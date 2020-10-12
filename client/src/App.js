@@ -3,6 +3,8 @@ import { Router, Route, Switch } from 'react-router'
 import history from './history.js'
 import GameMenu from './components/GameMenu.jsx'
 import CreateGame from './components/CreateGame.jsx'
+import JoinGame from './components/JoinGame.jsx'
+import TypeRacer from './components/TypeRacer.jsx'
 import socket from './socketConfig.js'
 
 const App = () => {
@@ -34,6 +36,11 @@ const App = () => {
       <Switch>
         <Route exact path='/' component={GameMenu} />
         <Route path='/game/create' component={CreateGame} />
+        <Route path='/game/join' component={JoinGame} />
+        <Route
+          path='/game/:gameID'
+          render={(props) => <TypeRacer {...props} gameState={gameState} />}
+        />
       </Switch>
     </Router>
   )

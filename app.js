@@ -22,6 +22,25 @@ const connectDB = mongoose.connect(
 )
 
 io.on('connect', (socket) => {
+  socket.on('join-game', async ({ gameID: _id, nickName }) => {
+    try {
+      let game = await Game.findById(_id)
+      if (game.isOpen) {
+        const gameID = (await game)._id.toString()
+        socket.join(gameID)
+        let player = {
+          socketID: socket.id,
+          nickName,
+        }
+        game.players.push(player)
+        game = await game.save()
+        io.to(gameID).emit('updateGame', game)
+      }
+    } catch (error) {
+      console.log(err)
+    }
+  })
+
   socket.on('create-game', async (nickName) => {
     try {
       const quotableData = await QuotableAPI()
